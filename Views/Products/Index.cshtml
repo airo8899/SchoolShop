@@ -1,0 +1,52 @@
+﻿@model IEnumerable<SchoolShop.Models.Product>
+
+@{
+    var title = "Продукты";
+    ViewData["Title"] = title;
+}
+
+
+<h2>@title</h2>
+
+<div class="row">
+    <div class="col-md-1">
+        <a href="/products/add" class="btn btn-primary">Добавить продукт</a>
+    </div>
+</div>
+<br />
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Название продукта</th>
+            <th>Цена</th>
+            <th>Категория</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var product in Model)
+        {
+            <tr>
+                <td>@product.Name</td>
+                <td>@product.Price</td>
+                <td>@product.Category.Name</td>
+                <td>
+                    <a href="products/@(product.Id)/addToCart" class="btn btn-info" onclick="ordered()">Добавить в корзину</a>
+                    <a href="products/edit/@(product.Id)" class="btn btn-info">Редактировать</a>
+                    <a href="products/delete/@(product.Id)" class="btn btn-danger">Удалить</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section scripts {
+    <script>
+        function ordered() {
+            var openBasket = confirm("Заказ добавлен в корзину.\n\nПерейти в корзину?");
+            if (openBasket) {
+                window.open("Basket/");
+            }
+        }
+    </script>
+}

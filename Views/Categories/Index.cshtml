@@ -1,0 +1,38 @@
+﻿@model IEnumerable<Category>
+
+@{ 
+    var title = "Категории";
+    ViewData["Title"] = title;
+}
+
+<div>
+    <h2>@title</h2>
+
+    <div>
+        <a href="/categories/add" class="btn btn-info">Добавить категорию</a>
+    </div>
+    
+
+    <table class="table table-bordered md-t-1">
+        <thead>
+            <tr>
+                <td>Название</td>
+                <td></td>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var category in Model)
+            {
+                <tr>
+                    <td>
+                        @category.Name
+                    </td>
+                    <td>
+                        <a href="/categories/@(category.Id)/edit" class="btn btn-info">Редактировать категорию</a>
+                        <a href="/categories/@(category.Id)/remove" class="btn btn-danger">Удалить</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

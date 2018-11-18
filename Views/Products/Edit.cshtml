@@ -1,0 +1,30 @@
+﻿@model SchoolShop.ViewModels.ProductViewModel
+
+@{
+    var formHeader = "Редактирование продукта";
+    ViewData["Title"] = formHeader;
+}
+
+<form class="form" asp-action="Save" method="post">
+    <h2>@formHeader</h2>
+    <input asp-for="Product.Id" type="hidden" />
+    <div class="form-group">
+        <label asp-for="Product.Name">Название</label>
+        <input class="form-control" asp-for="Product.Name" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Product.Price">Цена</label>
+        <input class="form-control" asp-for="Product.Price" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Product.CategoryId">Категория товара</label>
+        @Html.DropDownList("Product.CategoryId", Model.Categories, "Выберите категорию",
+        new { @class ="form-control"})
+    </div>
+
+    <input class="btn btn-success" type="submit" value="Сохранить" />
+
+</form>
+
+

@@ -1,0 +1,169 @@
+﻿@using SchoolShop.ViewModels;
+@model IEnumerable<OrderViewModel>
+
+@{
+    Layout = null;
+}
+
+@section scripts {
+    <script>
+        function orderPayed(orderId) {
+
+            var xhr = new XMLHttpRequest();
+
+            xhr.open("GET", "orders/" + orderId + "/payed", true);
+
+            xhr.send();
+
+            xhr.onload = function () {
+                console.log(xhr.response);
+                if (JSON.parse(xhr.response)) {
+                    var $button = document.getElementById("button_" + orderId);
+                    $button.style.display = 'none';
+                    var $orderStatusLabel = document.getElementById("order_status_" + orderId);
+                    $orderStatusLabel.textContent = "Оплаченный";
+                }
+            };
+        }
+    </script>
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Корзина</title>
+    <environment include="Development">
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+        <link rel="stylesheet" href="~/css/site.css" />
+    </environment>
+    <environment exclude="Development">
+        <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/css/bootstrap.min.css"
+              asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
+              asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
+        <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
+    </environment>
+    <style type="text/css">
+        .wrapper > * {
+            border: 12px solid #696969;
+            padding: 12px 14px;
+        }
+        .wrapper {
+            display: grid;
+            grid-template-columns: 1fr 3fr 1fr;
+            grid-template-rows: auto 2fr 1fr 1fr 2fr auto;
+            grid-gap: 16px;
+        }
+        .header {
+            grid-column-start: 1;
+            grid-column-end: 4;
+            grid-row-start: 1;
+            grid-row-end: 2;
+        }
+        .leftSideBar_1 {
+            grid-area: 2 / 1 / 4 / 2;
+        }
+        .leftSideBar_2 {
+            grid-area: 4 / 1 / 6 / 2;
+        }
+        .main {
+            grid-area: 2 / 2 / 6 / 3;
+        }
+        .rightSideBar_1 {
+            grid-area: 2 / 3 / 3 / 4;
+        }
+        .rightSideBar_2 {
+            grid-area: 3 / 3 / 5 / 4;
+        }
+        .rightSideBar_3 {
+            grid-area: 5 / 3 / 6 / 4;
+        }
+        .footer {
+            grid-area: 6 / 1 / 7 / 4;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="header">
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li><a asp-area="" asp-controller="Products" asp-action="Index">Продукты</a></li>
+                    <li><a asp-area="" asp-controller="Categories" asp-action="Index">Категории</a></li>
+                    <li><a asp-area="" asp-controller="Orders" asp-action="Index">История заказов</a></li>
+                    <li><a asp-area="" asp-controller="Basket" asp-action="Index">Корзина</a></li>
+                    <li><a asp-area="" asp-controller="Basket" asp-action="GRID">Корзина GRID</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="leftSideBar_1">
+            <p>Left SideBar #1</p>
+        </div>
+
+        <div class="leftSideBar_2">
+            <p>Left SideBar #2</p>
+        </div>
+
+        <div class="main">
+            <h2>Корзина</h2>
+            @if (Model.FirstOrDefault() == null)
+            {
+                <h3>Корзина пуста</h3>
+            }
+            @foreach (var order in Model)
+            {
+                <div class="md-t-1">
+                    <h3>Номер заказа: @order.Number</h3>
+
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Название продукта</th>
+                                <th>Цена</th>
+                                <th>Количество</th>
+                                <th>Итог</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in order.Items)
+                            {
+                                <tr>
+                                    <td>@item.ProductName</td>
+                                    <td>@item.ProductPrice</td>
+                                    <td>@item.Amount</td>
+                                    <td>@item.TotalSum</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+
+                    <h3>Стоимость заказа: @order.TotalSum</h3>
+                    @if (order.Status == OrderStatus.NotPayed)
+                    {
+                        <button id="button_@(order.Id)" onclick="orderPayed(@(order.Id))" class="btn btn-success">Оплатить заказ</button>
+                    }
+
+                </div>
+            }
+        </div>
+
+        <div class="rightSideBar_1">
+            <p>Right SideBar #1</p>
+        </div>
+
+        <div class="rightSideBar_2">
+            <p>Right SideBar #2</p>
+        </div>
+
+        <div class="rightSideBar_3">
+            <p>Right SideBar #3</p>
+        </div>
+
+        <div class="footer">
+            <p>&copy; 2018 - schoolshop</p>
+        </div>
+
+    </div>
+</body>
+</html>
